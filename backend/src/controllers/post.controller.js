@@ -1,7 +1,7 @@
 const postModel = require('../models/post.model.js');
 const ImageKit = require('@imagekit/nodejs');
 const {toFile} = require('@imagekit/nodejs');
-const jwt = require('jsonwebtoken');
+const identifyUser = require('../middlewares/auth.middleware.js');
 
 
 
@@ -18,23 +18,6 @@ async function createPostController (req, res) {
 
   const {caption} = req.body;
 
-  const {token} = req.cookies;
-
-  if(!token){
-    res.status(401).json({
-      message: "token not provided, Unauthorized access"
-    })
-  }
-
-  let decoded = null;
-  
-  try{
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    res.status(401).json({
-      message: "User not authorized"
-    })
-  }
 
   const file = await imageKit.files.upload({
     file: await toFile(Buffer.from(req.file.buffer), 'file'),
@@ -46,7 +29,7 @@ async function createPostController (req, res) {
   const post = await postModel.create({
     caption,
     imageUrl: file.url,
-    user: decoded.id
+    user: req.user.id
   })
 
   res.status(201).json({
@@ -60,25 +43,8 @@ async function createPostController (req, res) {
 
 // Get post controller
 async function getPostController (req, res) {
-  const {token} = req.cookies;
 
-  if(!token){
-    res.status(401).json({
-      message: "Token not provided, Unauthorized user"
-    })
-  }
-
-  let decoded = null;
-
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    res.status(401).json({
-      message: "Token invalid"
-    })
-  }
-
-  const userID = decoded.id;
+  const userID = req.user.id;
 
   const posts = await postModel.find({user: userID})
 
@@ -95,25 +61,8 @@ async function getPostController (req, res) {
 
 // Get post details controller
 async function getPostDetailsController (req, res) {
-  const {token} = req.body;
 
-  if(!token){
-    res.status(401).json({
-      message: "Token not provided, Unauthorized user"
-    })
-  }
-
-  let decoded = null;
-
-  try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    res.status(401).json({
-      message: "Token invalid"
-    })
-  }
-
-  const userID = decoded.id;
+  const userID = req.user.id;
 
   const {postId} = req.params;
 
