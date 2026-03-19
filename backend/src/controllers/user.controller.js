@@ -9,7 +9,7 @@ const userModel = require('../models/user.model.js');
 async function followUserController (req, res) {
 
     const follower = req.user.id;
-    const followee = req.params.id;
+    const followee = req.params.userId;
 
     if(follower === followee){
         return res.status(400).json({
@@ -56,7 +56,7 @@ async function followUserController (req, res) {
 async function unfollowUserController (req, res) {
 
     const follower = req.user.id;
-    const followee = req.params.id;
+    const followee = req.params.userId;
 
     const isUserFollowing = await followModel.findOne({follower, followee});
 

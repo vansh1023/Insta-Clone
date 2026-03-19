@@ -17,6 +17,7 @@ const imageKit = new ImageKit({
 // Create post controller
 async function createPostController (req, res) {
 
+
   const {caption} = req.body;
 
 
@@ -67,7 +68,7 @@ async function getPostDetailsController (req, res) {
 
   const {postId} = req.params;
 
-  const post = await postModel.find({postId});
+  const post = await postModel.findById(postId);
 
   if(!post){
     res.status(404).json({

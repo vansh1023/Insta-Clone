@@ -1,7 +1,7 @@
 const express = require('express');
 const postRouter = express.Router();
 const postController = require('../controllers/post.controller.js');
-const multer = require('./multer');
+const multer = require('multer');
 const identifyUser = require('../middlewares/auth.middleware.js');
 const upload = multer({storage: multer.memoryStorage()})
 
@@ -36,4 +36,4 @@ postRouter.post('/like/:postId', identifyUser, postController.likePostController
 
 
 
-momdule.exports = postRouter;
+module.exports = postRouter;
