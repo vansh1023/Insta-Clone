@@ -2,6 +2,7 @@ const postModel = require('../models/post.model.js');
 const ImageKit = require('@imagekit/nodejs');
 const {toFile} = require('@imagekit/nodejs');
 const identifyUser = require('../middlewares/auth.middleware.js');
+const likeModel = require('../models/like.model.js');
 
 
 
@@ -93,8 +94,40 @@ async function getPostDetailsController (req, res) {
 
 
 
+
+
+
+// like post controller
+async function likePostController (req, res) {
+
+  const postId = req.params.postId;
+  const user = req.user.id;
+
+  const post = await postModel.findById(postId);
+
+  if(!post){
+    return res.status(404).json({
+      message: "post not found"
+    })
+  }
+
+  const like = await likeModel.create({
+    post: postId,
+    user
+  })
+
+  res.status(200).json({
+    message: "post liked successfully",
+    like
+  })
+  
+}
+
+
+
 module.exports = {
     createPostController,
     getPostController,
-    getPostDetailsController
+    getPostDetailsController,
+    likePostController
 }
