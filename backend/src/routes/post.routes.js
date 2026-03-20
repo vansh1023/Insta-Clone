@@ -33,6 +33,12 @@ postRouter.post('/like/:postId', identifyUser, postController.likePostController
 
 
 
+// Get feed route
+postRouter.get('/feed', identifyUser, postController.getFeedController);
+
+
+
+
 
 
 
