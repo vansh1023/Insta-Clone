@@ -32,6 +32,11 @@ postRouter.post('/like/:postId', identifyUser, postController.likePostController
 
 
 
+// unlike post route
+postRouter.delete('/unlike/:postId', identifyUser, postController.unlikePostController);
+
+
+
 
 // Get feed route
 postRouter.get('/feed', identifyUser, postController.getFeedController);
